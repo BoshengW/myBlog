@@ -1,0 +1,51 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>BoshengWu Blog Input</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+<h2>BoshengWu Blog System Login Section</h2>
+<p th:text="'Hello, ' + ${name} + '!'" />
+<div class="add">
+    <h2>注册新账号</h2>
+    <!-- send to /add execute -->
+    <form action="/add" method="GET" target="_blank">
+        用户名:<br>
+        <input type="text" name="name"><br>
+        密码:<br>
+        <input type="password" name="password"><br>
+        <input type="submit" value="注册" onclick="return window.confirm('注册成功！')">
+    </form>
+</div>
+<div class="login">
+    <h2>登陆账号</h2>
+    <form action="/login" method="GET" target="_blank" onsubmit="return validation()">
+        用户:<br>
+        <input type="text" name="name" id="valid_check"><br>
+        密码:<br>
+        <input type="password" name="password"><br>
+        <input type="submit" value="登陆">
+    </form>
+</div>
+<div class="all">
+    <h2><a href="/all">所有注册账号信息</a></h2>
+</div>
+<script type="text/javascript">
+    function validation() {
+        var name = document.getElementById('valid_check').value;
+        if(name=="logging failed") {
+            alert('password wrong');
+            return false;
+        } else {
+            alert('success');
+            return true;
+        }
+    }
+</script>
+</body>
+
+</html>
