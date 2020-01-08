@@ -6,18 +6,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="user")
-public class User {
-
+@Table(name="tag")
+public class Tag {
     @GeneratedValue
     private int id;
     @Id
     private String name;
-    private String password;
-
-    //
-    public User() {
-    }
+    private String description;
 
     public int getId() {
         return id;
@@ -35,12 +30,11 @@ public class User {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDescription(String description) {
+        this.description = description;
     }
-
 }

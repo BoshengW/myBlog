@@ -13,34 +13,59 @@
 
 <h4>Add a Coffee Order</h4>
 <p>name: <input type="text" id="name"></p>
-<p>drink: <input type="text" id="drink"></p>
+<p>drink: <input type="text" id="price"></p>
 <button id="add-order">Add!</button>
 
 <script>
     $(function() {
 
         var $orders = $('#orders');
+        var $name = $('#name');
+        var $price = $('#price');
 
+        function addOrder(order) {
+            $orders.append('<li> name: '+order.name +',price: '+ order.price +'</li>');
+        }
+
+        $.ajax({
+           type: "GET",
+           url: "/orders",
+           success: function(orders) {
+               $.each(orders, function(idx, order) {
+                   var cvtJson = JSON.parse(order);
+                   addOrder(cvtJson);
+
+               })
+           }
+        });
+
+
+        // make a post request to add
         $('#add-order').on('click', function() {
 
+            // add input into a object
+            // Note:  this is not a json object , you need to use JSON.stringify() to convert
+            var order = {
+                name: $name.val(),
+                price: $price.val()
+            };
+
             $.ajax({
-                type: 'GET',
-                url: '/orders',
-                success: function(orders) {
-                    // travesal the data from backend
-                    $.each(orders, function(i, item) {
-                        var cvtJson = JSON.parse(item);
-                        $orders.append('<li> name: '+cvtJson.name +',price: '+ cvtJson.price +'</li>');
+                type: "POST",
+                // data type send to backend is JSON
+                contentType: "application/json", // content type is the data you send to backend
+                url: "/orders",
+                data: JSON.stringify(order),
+                // data type extract from backend is String
+                // dataType: 'json', // data type is the data you extract from backend
 
-                    })
+                success: function(newOrder) {
+                    var newOrderJson = JSON.parse(newOrder);
+                    addOrder(newOrderJson);
                 },
-                error: function() {
-                    alert('error loading!');
-                },
-                
-
-
-
+                error: function(newOrder) {
+                    alert("error loading!");
+                }
             });
         });
     })

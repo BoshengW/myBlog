@@ -2,11 +2,11 @@ package com.benson.ajaxdataconnection.controller;
 
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,4 +44,13 @@ public class AjaxController {
         return jsonList;
 
     }
+
+    @PostMapping("/orders")
+    @ResponseBody
+    public String addNewOrder(@RequestBody String newOrderJson){
+        JSONObject json3 = new JSONObject(newOrderJson);
+        json3.put("id",3);
+        return json3.toString();
+    }
+
 }
