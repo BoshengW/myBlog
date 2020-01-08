@@ -10,7 +10,7 @@
 <h2>Tag Management-Bosheng Blog System</h2>
 <ul id="tag_database"></ul>
 <h4>
-    <p>name: <input type="text" id="name"></p>
+    <p>name: <input type="text" id="tag_name"></p>
     <p>description: <input type="text" id="description"></p>
     <button id="add_newTag">Add New Tag</button>
 </h4>
@@ -18,9 +18,12 @@
 <script>
     $(function() {
         var $TagDisplay = $("#tag_database");
+        var $name = $('#tag_name');
+        var $description = $('#description');
 
         function addTag(TagEachRow) {
-            $TagDisplay.append('<li>'+TagEachRow.name +',   '+ TagEachRow.description +'</li>');
+            var $DeleteButton = '<button class="delete_btn">X</button>'
+            $TagDisplay.append('<li>'+TagEachRow.tag_name +', '+ TagEachRow.description + $DeleteButton+'</li>');
         }
 
         $.ajax({
@@ -34,11 +37,43 @@
                 })
             },
             error: function() {
-                alert("error loading");
+                alert("Error Loading");
             }
         });
 
-        $('')
+        $('#add_newTag').on('click', function() {
+            // add input into an object
+            var tag = {
+                tag_name: $name.val(),
+                description: $description.val(),
+            };
+
+            if (!tag.tag_name) {
+                alert("You need to input tagname!");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "/tag/add",
+                    data: JSON.stringify(tag), // convert var tag into json
+
+                    success: function(newTag) {
+                        if(newTag!="Nothing update") {
+                            var newTagJson = JSON.parse(newTag);
+                            addTag(newTagJson);
+                            window.location.reload(); // refresh current window url webpage
+                        } else {
+                            alert("Tag already exist");
+                        }
+
+                    },
+                    error: function(newTag) {
+                        alert("Error Loading!");
+                    }
+                })
+            }
+
+        });
 
 
     })

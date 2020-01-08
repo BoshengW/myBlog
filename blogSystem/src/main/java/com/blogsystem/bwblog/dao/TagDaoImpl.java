@@ -2,6 +2,7 @@ package com.blogsystem.bwblog.dao;
 
 import com.blogsystem.bwblog.mapper.TagMapper;
 import com.blogsystem.bwblog.model.Tag;
+import com.blogsystem.bwblog.toolfunction.JsonCvtOperaiton;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,7 +30,7 @@ public class TagDaoImpl implements TagDao{
         for (int i=0;i<rsltList.size();i++) {
             JSONObject TagJsonEachRow = new JSONObject();
             TagJsonEachRow.put("id",rsltList.get(i).getId());
-            TagJsonEachRow.put("name",rsltList.get(i).getName());
+            TagJsonEachRow.put("tag_name",rsltList.get(i).getName());
             TagJsonEachRow.put("description",rsltList.get(i).getDescription());
             System.out.println(TagJsonEachRow.toString());
             jsonList.add(TagJsonEachRow.toString());
@@ -46,7 +47,7 @@ public class TagDaoImpl implements TagDao{
     }
 
     @Override
-    public Tag deleteByName(String name) {
+    public String deleteByName(String name) {
 
         Tag deleteTag = getTagByName(name);
         String sql = "delete from tag where name=?;";
@@ -57,12 +58,12 @@ public class TagDaoImpl implements TagDao{
             }
         });
 
-        return deleteTag;
+        return JsonCvtOperaiton.CvtTag2Json(deleteTag);
     }
 
 
     @Override
-    public Tag addNewTag(Tag tag) {
+    public String addNewTag(Tag tag) {
         String sql = "insert into tag values(?,?,?);";
         int row = jdbcTemplate.update(sql, new PreparedStatementSetter() {
             @Override
@@ -72,7 +73,8 @@ public class TagDaoImpl implements TagDao{
                 preparedStatement.setString(3,tag.getDescription());
             }
         });
-        return tag;
+
+        return JsonCvtOperaiton.CvtTag2Json(tag);
     }
 
     @Override

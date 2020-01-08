@@ -11,8 +11,8 @@ public interface TagDao {
     // get all tag information from database
     public List<String> getAllTag(); // return list of tag with a json String
     public Tag getTagByName(String name);
-    public Tag deleteByName(String name);
-    public Tag addNewTag(Tag tag);
+    public String deleteByName(String name);
+    public String addNewTag(Tag tag);
     public Tag updateTag(Tag tag);
 
 }
