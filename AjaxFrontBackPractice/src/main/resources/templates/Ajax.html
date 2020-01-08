@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+<body>
+<h1>JQuery Ajax Tutorial</h1>
+<h2>Coffee Orders</h2>
+<ul id="orders"></ul>
+
+<h4>Add a Coffee Order</h4>
+<p>name: <input type="text" id="name"></p>
+<p>drink: <input type="text" id="drink"></p>
+<button id="add-order">Add!</button>
+
+<script>
+    $(function() {
+
+        var $orders = $('#orders');
+
+        $('#add-order').on('click', function() {
+
+            $.ajax({
+                type: 'GET',
+                url: '/orders',
+                success: function(orders) {
+                    // travesal the data from backend
+                    $.each(orders, function(i, item) {
+                        var cvtJson = JSON.parse(item);
+                        $orders.append('<li> name: '+cvtJson.name +',price: '+ cvtJson.price +'</li>');
+
+                    })
+                },
+                error: function() {
+                    alert('error loading!');
+                },
+                
+
+
+
+            });
+        });
+    })
+</script>
+</body>
+</html>
