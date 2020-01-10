@@ -78,17 +78,14 @@ public class TagDaoImpl implements TagDao{
 
     @Override
     public Tag updateTag(Tag tag) {
-        Tag orgTag = getTagByName(tag.getName());
-        String sql = "update tag set id=?, description=? where name=?;";
+        String sql = "update tag set description=? where name=?;";
         int row = jdbcTemplate.update(sql, new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement preparedStatement) throws SQLException {
-                preparedStatement.setInt(1,tag.getId());
-                preparedStatement.setString(2,tag.getDescription());
-                preparedStatement.setString(3, tag.getName());
-
+                preparedStatement.setString(1, tag.getDescription());
+                preparedStatement.setString(2, tag.getName());
             }
         });
-        return orgTag;
+        return tag;
     }
 }

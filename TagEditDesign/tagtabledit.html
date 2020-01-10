@@ -54,7 +54,7 @@
         $(document).on('click','.btn-update',function() {
             if(_trEdit) {
                 var _tag = $('input[id=name]').val();
-                var _description = $('input[id=description]').val();
+                var _description = $('input[id=descripton]').val();
 
                 $(_trEdit).find('td:eq(0)').text(_tag);
                 $(_trEdit).find('td:eq(1)').text(_description);

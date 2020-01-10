@@ -4,6 +4,8 @@ package com.blogsystem.bwblog.controller;
 * */
 import com.blogsystem.bwblog.dao.TagDao;
 import com.blogsystem.bwblog.model.Tag;
+import com.blogsystem.bwblog.toolfunction.JsonCvtOperaiton;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,11 +46,18 @@ public class TagController {
     @ResponseBody
     public String DeleteTag(@RequestBody String DelTagJson) {
         // convert String json into json object
-        JSONObject delTagJson = new JSONObject(DelTagJson);
-        String delTagName = (String) delTagJson.get("tag_name");
-        tagDao.deleteByName(delTagName);
+        try{
+            JSONObject delTagJson = new JSONObject(DelTagJson);
+            String delTagName = (String) delTagJson.get("tag_name");
+            tagDao.deleteByName(delTagName);
 
-        return "Delete Success!";
+            return "Delete Success";
+
+        } catch(Exception Issue) {
+            System.out.println("Cannot Delete tag");
+            return "Delete Failed";
+        }
+
     }
 
     @PostMapping("/tag/add")
@@ -75,6 +84,62 @@ public class TagController {
             return "Nothing update";
         }
 
+    }
+    @PostMapping("/tag/update")
+    @ResponseBody
+    public String editTag(@RequestBody String TagJsonString) {
+        try{
+
+            // extract JSON Array string from forntend (by JSONArray())
+            JSONArray jsonTag = new JSONArray(TagJsonString);
+            JSONObject oldTagJson = (JSONObject) jsonTag.get(0);
+            JSONObject newTagJson = (JSONObject) jsonTag.get(1);
+
+
+            // check if tagname is changed
+            if(oldTagJson.get("tag_name").equals(newTagJson.get("tag_name"))) {
+                // in this case only description change
+                System.out.println("same");
+                Tag updateTag = tagDao.getTagByName((String) oldTagJson.get("tag_name"));
+
+                updateTag.setDescription((String) newTagJson.get("description"));
+                tagDao.updateTag(updateTag);
+            } else {
+                // if tag_name is different, then we need to remove old one and create a new row
+                System.out.println("diff");
+                Tag oldTag = tagDao.getTagByName((String) oldTagJson.get("tag_name"));
+                // make a new tag object with old id
+                Tag newTag = new Tag();
+                newTag.setId(oldTag.getId());
+                newTag.setName((String) newTagJson.get("tag_name"));
+                newTag.setDescription((String) newTagJson.get("description"));
+
+                // delete old one
+                tagDao.deleteByName((String) oldTagJson.get("tag_name"));
+                tagDao.addNewTag(newTag);
+
+            }
+            return "Update Success";
+
+        } catch(Exception Issue) {
+            System.out.println("Cannot Update tag or TagName conflict");
+            return "Update Failed";
+        }
+
+    }
+
+    @PostMapping("/tag/search")
+    @ResponseBody
+    public String searchTag(@RequestBody String TagJsonString) {
+        try{
+            JSONObject jsonTag = new JSONObject(TagJsonString);
+            Tag searchTag = tagDao.getTagByName((String) jsonTag.get("tag_name"));
+            return JsonCvtOperaiton.CvtTag2Json(searchTag);
+
+        } catch(Exception Issue) {
+            System.out.println("Cannot find this tag");
+            return "Search Failed";
+        }
     }
 
 }
