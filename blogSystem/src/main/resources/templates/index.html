@@ -1,50 +1,115 @@
-
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>BoshengWu Blog Input</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
 <body>
 <h2>BoshengWu Blog System Login Section</h2>
-<p th:text="'Hello, ' + ${name} + '!'" />
-<div class="add">
-    <h2>注册新账号</h2>
-    <!-- send to /add execute -->
-    <form action="/add" method="GET" target="_blank">
+<h2>Sign Up New Account</h2>
+<!-- send to /add execute -->
+<h4>
+    <div class="login" id="signUp">
         用户名:<br>
-        <input type="text" name="name"><br>
+        <input type="text" name="name" id="newUserName"><br>
         密码:<br>
-        <input type="password" name="password"><br>
-        <input type="submit" value="注册" onclick="return window.confirm('注册成功！')">
-    </form>
-</div>
-<div class="login">
-    <h2>登陆账号</h2>
-    <form action="/login" method="GET" target="_blank" onsubmit="return validation()">
-        用户:<br>
-        <input type="text" name="name" id="valid_check"><br>
+        <input type="password" name="password" id="newPassword"><br>
+        <button type="button" class="signupBtn">SignUp</button>
+    </div>
+</h4>
+<h2>Log In</h2>
+<h4>
+    <div class="login" id="login">
+        用户名:<br>
+        <input type="text" name="name" id="UserName"><br>
         密码:<br>
-        <input type="password" name="password"><br>
-        <input type="submit" value="登陆">
-    </form>
-</div>
-<div class="all">
-    <h2><a href="/all">所有注册账号信息</a></h2>
-</div>
-<script type="text/javascript">
-    function validation() {
-        var name = document.getElementById('valid_check').value;
-        if(name=="logging failed") {
-            alert('password wrong');
-            return false;
-        } else {
-            alert('success');
-            return true;
+        <input type="password" name="password" id="Password"><br>
+        <button type="button" class="loginBtn">LogIn</button>
+    </div>
+</h4>
+
+<script>
+    $(function() {
+
+        function ckUsername(username, password) {
+            var userInfo = {
+                name: username,
+                password: password
+            };
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/user/add",
+                data: JSON.stringify(userInfo),
+
+                success: function(mesgback) {
+                    alert(mesgback);
+                },
+                error: function() {
+                    alert("Process Error, fail in sending to server")
+                }
+            })
         }
-    }
+
+        /* Sign up new account operation
+        * */
+
+        $(document).on('click', '.signupBtn', function() {
+            var _name = $('#newUserName').val();
+            var _password = $('#newPassword').val();
+            // check name / password are valid
+            if(_password=="" | _name=="") {
+                alert("Username or Password should not be empty");
+            } else {
+                // if name / password are valid -> then check if username exist
+                ckUsername(_name,_password);
+                window.location.reload();
+            }
+        });
+
+        /*Log in your existed account
+        * */
+
+        $(document).on('click', '.loginBtn', function() {
+            var _name = $('#UserName').val();
+            var _password = $('#Password').val();
+
+            // check name / password are valid
+            if(_password=="" | _name=="") {
+                alert("Please input your password or username")
+            } else {
+                var userInfo = {
+                    name: _name,
+                    password: _password
+                };
+
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "user/login",
+                    data: JSON.stringify(userInfo),
+
+                    success: function(mesgback) {
+                        alert(mesgback);
+                        if(mesgback=="Success") {
+                            location.href="tag";
+                        } else {
+                            window.location.reload();
+                        }
+                    },
+                    error: function() {
+                        alert("Process Error, fail in sending to server")
+                    }
+                })
+            }
+        })
+
+    })
+
 </script>
 </body>
 

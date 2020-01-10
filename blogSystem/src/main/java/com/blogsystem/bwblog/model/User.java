@@ -15,7 +15,7 @@ public class User {
     private String name;
     private String password;
 
-    //
+    // for entity must have a empty constructor
     public User() {
     }
 
