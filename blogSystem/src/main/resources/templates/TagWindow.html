@@ -4,27 +4,48 @@
     <meta charset="UTF-8">
     <title>This is the window for tag</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.js"></script>
+<!--    <script type="text/javascript" src="./js/Tag.js"></script>-->
 </head>
 <body>
 <h1>My firsyt Tag Management System</h1>
 <h2>Tag Management-Bosheng Blog System</h2>
-<ul id="tag_database"></ul>
+<table id="tag_database" border="1">
+    <tr>
+        <th>Tag Name</th>
+        <th>Description</th>
+    </tr>
+</table>
+<!--<ul id="tag_database"></ul>-->
 <h4>
     <p>name: <input type="text" id="tag_name"></p>
     <p>description: <input type="text" id="description"></p>
     <button id="add_newTag">Add New Tag</button>
 </h4>
+<h4>
+    <p>Tag_Name: <input type="text" id="findTag"></p>
+    <button id="searchTag">Search</button>
+</h4>
+
 
 <script>
     $(function() {
-        var $TagDisplay = $("#tag_database");
+
         var $name = $('#tag_name');
         var $description = $('#description');
+        var _row = null;
+
 
         function addTag(TagEachRow) {
-            var $DeleteButton = '<button class="delete_btn">X</button>'
-            $TagDisplay.append('<li>'+TagEachRow.tag_name +', '+ TagEachRow.description + $DeleteButton+'</li>');
+            // var $DeleteButton = '<button class="delete_btn">X</button>';
+            // $TagDisplay.append('<li>'+TagEachRow.tag_name +', '+ TagEachRow.description + $DeleteButton+'</li>');
+            var rowCnt = $('tag_database tr').length;
+            var addDelete = '<td><button class="editBtn" tagId="'+ TagEachRow.tag_name +'">Edit</button>' +
+                            '<button class="delBtn" tagId="'+ TagEachRow.tag_name +'">Delete</button></td>';
+            $('#tag_database tr:last').after('<tr><td>'+TagEachRow.tag_name+'</td><td>'+TagEachRow.description +'</td>'+addDelete+'</tr>');
         }
+
+
 
         $.ajax({
             type: "GET",
@@ -32,8 +53,10 @@
             success: function(tags) {
                 $.each(tags, function(idx, tag) {
                     // from backend, it will convert all data into a list of json string
+                    // var checkDelButton =
                     var TagJson = JSON.parse(tag);
                     addTag(TagJson);
+
                 })
             },
             error: function() {
@@ -41,6 +64,30 @@
             }
         });
 
+
+        // static / dynamic button
+        $(document).on('click', '#tag_database tbody tr td button.delBtn',function() {
+            var delTag = {
+                tag_name: $(this).attr('tagId'),
+                description: "Delete!"
+            };
+            $.ajax({
+
+                type: "DELETE",
+                contentType: "application/json",
+                url: "/tag/delete/",
+                data: JSON.stringify(delTag),
+                success: function(mesgBack) {
+                    alert(mesgBack);
+                    window.location.reload();
+                },
+                error: function() {
+                    alert("Process Error, Try Again");
+                }
+            });
+        });
+
+        // add new Tag in /tag
         $('#add_newTag').on('click', function() {
             // add input into an object
             var tag = {
@@ -72,10 +119,7 @@
                     }
                 })
             }
-
         });
-
-
     })
 
 </script>

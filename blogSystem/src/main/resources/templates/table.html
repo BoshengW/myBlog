@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The five projects has the same option</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+<body>
+<h2>
+    <table id="mytable" border="1">
+        <tr>
+            <th>Tag Name</th>
+            <th>Description</th>
+        </tr>
+    </table>
+</h2>
+<h2>
+    <input type="text" id="Tag" name="NewTag">
+    <input type="text" id="Description" name="Description">
+    <button id="add">Add!</button>
+</h2>
+<script>
+    // create jquery function
+    $(function() {
+
+        var $newtag = $("#Tag");
+        var $description = $("#Description");
+
+        function addTblRow(newTag) {
+            var rowCnt = $("#mytable tr").length;
+            var addDelete = '<td><button id="del'+ rowCnt +'">X</button></td>';
+            $('#mytable tr:last').after('<tr><td>'+newTag.Tag+'</td><td>'+newTag.Description +'</td>'+addDelete+'</tr>');
+
+        }
+
+        $("#add").on("click", function() {
+            var newTag = {
+                Tag: $newtag.val(),
+                Description: $description.val()
+            }
+            addTblRow(newTag);
+        })
+    })
+</script>
+</body>
+
+</html>

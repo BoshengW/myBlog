@@ -7,15 +7,8 @@ import com.blogsystem.bwblog.model.Tag;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -25,6 +18,11 @@ public class TagController {
 
     @Autowired
     private TagDao tagDao;
+
+    @GetMapping("/")
+    public String Main() {
+        return "table";
+    }
 
     @GetMapping("/tag")
     public String MainWindowOfTag() {
@@ -40,6 +38,17 @@ public class TagController {
         this.rowcnt = TagList.size();
 
         return TagList;
+    }
+
+    @DeleteMapping("tag/delete")
+    @ResponseBody
+    public String DeleteTag(@RequestBody String DelTagJson) {
+        // convert String json into json object
+        JSONObject delTagJson = new JSONObject(DelTagJson);
+        String delTagName = (String) delTagJson.get("tag_name");
+        tagDao.deleteByName(delTagName);
+
+        return "Delete Success!";
     }
 
     @PostMapping("/tag/add")

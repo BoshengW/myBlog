@@ -32,7 +32,6 @@ public class TagDaoImpl implements TagDao{
             TagJsonEachRow.put("id",rsltList.get(i).getId());
             TagJsonEachRow.put("tag_name",rsltList.get(i).getName());
             TagJsonEachRow.put("description",rsltList.get(i).getDescription());
-            System.out.println(TagJsonEachRow.toString());
             jsonList.add(TagJsonEachRow.toString());
         }
         return jsonList;
