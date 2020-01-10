@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Table </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+<body>
+<div>
+    <input class="form-control" type="text" id="name">
+    <input class="form-control" type="text" id="description">
+    <button type="button" class="btn-info" id="btn-add">Add</button>
+    <button type="button" class="btn-update" id="btn-save">Update</button>
+</div>
+<h4>
+    <table id="tag_tbl" border="1">
+        <thread>
+            <tr>
+                <th>Tagname</th>
+                <th>Description</th>
+            </tr>
+        </thread>
+
+        <tbody id="main">
+        </tbody>
+
+    </table>
+</h4>
+<script>
+    $(function() {
+
+        $("#btn-add").on('click', function() {
+            // declare variable
+            var _name = $("#name").val();
+            var _description = $("#description").val();
+            var _tr = '<tr><td>'+ _name+'</td><td>'+_description+'</td><td><button type="button" class="btn-edit" id="'+_name+'">Edit</button></td></tr>';
+            $('#main').append(_tr);
+        });
+        var _trEdit = null;
+        $(document).on('click', '.btn-edit', function () {
+            // var _tag = $(this).attr("id");
+
+            // another define option
+            _trEdit = $(this).closest("tr");
+            var _tr = $(this).closest("tr");
+            var _tag = $(_tr).find("td:eq(0)").text();
+            var _description = $(_tr).find("td:eq(1)").text();
+
+            $('input[id="name"]').val(_tag);
+            $('input[id="description"]').val(_description);
+        });
+
+        $(document).on('click','.btn-update',function() {
+            if(_trEdit) {
+                var _tag = $('input[id=name]').val();
+                var _description = $('input[id=description]').val();
+
+                $(_trEdit).find('td:eq(0)').text(_tag);
+                $(_trEdit).find('td:eq(1)').text(_description);
+            }
+
+        });
+
+
+
+
+
+    })
+</script>
+
+</body>
+</html>
