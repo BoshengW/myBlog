@@ -22,7 +22,7 @@ public class UserController {
     @GetMapping("/user")
     public String LogInMain() {
         List<User> list = userDao.getAllUser();
-        rowCnt = list.size();
+        this.rowCnt = list.size();
         return "index";
     }
 
@@ -32,24 +32,23 @@ public class UserController {
         /*
         NewUSerJsonStr = "{ name='XXX', password='YYYY' }"
         * */
-        try{
-            JSONObject NewUserJson = new JSONObject(NewUserJsonStr);
-            if(!userDao.userExist(NewUserJson.getString("name"))) {
-                User newAccount = new User();
-                newAccount.setId(rowCnt++);
-                newAccount.setPassword(NewUserJson.getString("password"));
-                newAccount.setName(NewUserJson.getString("name"));
-                // add new account into database
-                userDao.addAUser(newAccount);
-                return "Add Success";
 
-            } else {
-                return "Username exist";
-            }
+        JSONObject NewUserJson = new JSONObject(NewUserJsonStr);
+        if(!userDao.userExist(NewUserJson.getString("name"))) {
 
-        } catch(Exception Issue) {
-            return "Process Error, try again";
+            User newAccount = new User();
+            newAccount.setId(++rowCnt);
+            newAccount.setPassword(NewUserJson.getString("password"));
+            newAccount.setName(NewUserJson.getString("name"));
+            // add new account into database
+            userDao.addAUser(newAccount);
+            return "Add Success"; // why???
+
+        } else {
+            return "Username exist";
         }
+
+
     }
 
     @PostMapping("/user/login")

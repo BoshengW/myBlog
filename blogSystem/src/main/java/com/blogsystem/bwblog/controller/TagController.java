@@ -99,14 +99,14 @@ public class TagController {
             // check if tagname is changed
             if(oldTagJson.get("tag_name").equals(newTagJson.get("tag_name"))) {
                 // in this case only description change
-                System.out.println("same");
+
                 Tag updateTag = tagDao.getTagByName((String) oldTagJson.get("tag_name"));
 
                 updateTag.setDescription((String) newTagJson.get("description"));
                 tagDao.updateTag(updateTag);
             } else {
                 // if tag_name is different, then we need to remove old one and create a new row
-                System.out.println("diff");
+
                 Tag oldTag = tagDao.getTagByName((String) oldTagJson.get("tag_name"));
                 // make a new tag object with old id
                 Tag newTag = new Tag();

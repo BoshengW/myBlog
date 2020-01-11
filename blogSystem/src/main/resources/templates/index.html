@@ -9,7 +9,7 @@
 
 <body>
 <h2>BoshengWu Blog System Login Section</h2>
-<h2>Sign Up New Account</h2>
+<h2>注册新用户</h2>
 <!-- send to /add execute -->
 <h4>
     <div class="login" id="signUp">
@@ -20,7 +20,7 @@
         <button type="button" class="signupBtn">SignUp</button>
     </div>
 </h4>
-<h2>Log In</h2>
+<h2>已有账号登录</h2>
 <h4>
     <div class="login" id="login">
         用户名:<br>
@@ -34,26 +34,26 @@
 <script>
     $(function() {
 
-        function ckUsername(username, password) {
-            var userInfo = {
-                name: username,
-                password: password
-            };
-
-            $.ajax({
-                type: "POST",
-                contentType: "application/json",
-                url: "/user/add",
-                data: JSON.stringify(userInfo),
-
-                success: function(mesgback) {
-                    alert(mesgback);
-                },
-                error: function() {
-                    alert("Process Error, fail in sending to server")
-                }
-            })
-        }
+        // function ckUsername(username, password) {
+        //     var userInfo = {
+        //         name: username,
+        //         password: password
+        //     };
+        //
+        //     $.ajax({
+        //         type: "POST",
+        //         contentType: "application/json",
+        //         url: "/user/add",
+        //         data: JSON.stringify(userInfo),
+        //
+        //         success: function(mesgback) {
+        //             alert(mesgback);
+        //         },
+        //         error: function() {
+        //             alert("Process Error, fail in sending to server")
+        //         }
+        //     })
+        // }
 
         /* Sign up new account operation
         * */
@@ -64,10 +64,30 @@
             // check name / password are valid
             if(_password=="" | _name=="") {
                 alert("Username or Password should not be empty");
+
             } else {
                 // if name / password are valid -> then check if username exist
-                ckUsername(_name,_password);
-                window.location.reload();
+                var userInfo = {
+                    name: _name,
+                    password: _password
+                };
+
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "/user/add",
+                    data: JSON.stringify(userInfo),
+
+                    success: function(mesgback1) {
+                        alert(mesgback1);
+                        window.location.reload();
+                    },
+                    error: function() {
+                        alert("Process Error, fail in sending to server")
+                    }
+                });
+                // ckUsername(_name,_password);
+
             }
         });
 
@@ -93,9 +113,9 @@
                     url: "user/login",
                     data: JSON.stringify(userInfo),
 
-                    success: function(mesgback) {
-                        alert(mesgback);
-                        if(mesgback=="Success") {
+                    success: function(mesgback2) {
+                        alert(mesgback2);
+                        if(mesgback2=="Success") {
                             location.href="tag";
                         } else {
                             window.location.reload();
